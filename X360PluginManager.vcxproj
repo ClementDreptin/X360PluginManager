@@ -21,6 +21,9 @@
     <ProjectReference Include="deps\AtgFramework\AtgFramework.vcxproj">
       <Project>{91d208a6-9936-47fd-9659-67205c3eb0ab}</Project>
     </ProjectReference>
+    <ProjectReference Include="deps\mINI\mINI.vcxproj">
+      <Project>{32e6acfe-ecd5-41e4-afef-675d74786e96}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -35,14 +38,14 @@
   <PropertyGroup>
     <OutDir>$(SolutionDir)build\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)build\$(Configuration)\obj\</IntDir>
-    <RemoteRoot>hdd:\Games\$(ProjectName)</RemoteRoot>
+    <RemoteRoot>hdd:\Homebrew\$(ProjectName)</RemoteRoot>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     <ImageXexOutput>$(OutDir)default.xex</ImageXexOutput>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)deps\XexUtils\include;$(XEDK)\Source\Samples\Common</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)deps\XexUtils\include;$(XEDK)\Source\Samples\Common;$(SolutionDir)deps\mINI</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -72,7 +75,7 @@
     </Link>
     <Deploy>
       <DeploymentType>CopyToHardDrive</DeploymentType>
-      <DeploymentFiles>$(RemoteRoot)=$(ImagePath);$(RemoteRoot)\Media=$(OutDir)Media</DeploymentFiles>
+      <DeploymentFiles>$(RemoteRoot)=$(ImagePath);$(RemoteRoot)\Media=$(OutDir)Media;$(RemoteRoot)=$(ProjectDir)src\config.ini</DeploymentFiles>
     </Deploy>
     <ImageXex>
       <ConfigurationFile>$(SolutionDir)config.xml</ConfigurationFile>
@@ -83,10 +86,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\Console.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">

@@ -48,3 +48,5 @@ private:
 
     void Print(const Line &line);
 };
+
+extern Console g_Console;

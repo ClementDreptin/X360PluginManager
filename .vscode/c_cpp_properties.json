@@ -6,6 +6,7 @@
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/deps/XexUtils/include",
                 "${env:XEDK}/Source/Samples/Common",
+                "${workspaceFolder}/deps/mINI",
                 "${env:XEDK}/include/xbox"
             ],
             "defines": ["_DEBUG", "_XBOX", "_MBCS"],
@@ -17,6 +18,7 @@
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/deps/XexUtils/include",
                 "${env:XEDK}/Source/Samples/Common",
+                "${workspaceFolder}/deps/mINI",
                 "${env:XEDK}/include/xbox"
             ],
             "defines": ["NDEBUG", "_XBOX", "_MBCS"],
