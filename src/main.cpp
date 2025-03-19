@@ -30,12 +30,11 @@ static HRESULT LoadPlugins()
         std::ifstream file(pluginPath);
         if (!file.good())
         {
-            g_Console.Warn(INDENT + pluginPath + " doesn't exist, skipping.");
+            g_Console.Warn(XexUtils::Formatter::Format(INDENT "\"%s\" doesn't exist, skipping.", pluginPath.c_str()));
             continue;
         }
 
-        std::string message = XexUtils::Formatter::Format(INDENT "Loaded %s.", pluginsToLoad[i].c_str());
-        g_Console.Success(message);
+        g_Console.Success(XexUtils::Formatter::Format(INDENT "Loaded \"%s\".", pluginsToLoad[i].c_str()));
     }
 
     return hr;
@@ -62,12 +61,11 @@ static HRESULT UnloadPlugins()
         HANDLE handle = GetModuleHandle(pluginPath.c_str());
         if (handle == nullptr)
         {
-            g_Console.Warn(INDENT + pluginPath + " not loaded, skipping.");
+            g_Console.Warn(XexUtils::Formatter::Format(INDENT "\"%s\" is not loaded, skipping.", pluginPath.c_str()));
             continue;
         }
 
-        std::string message = XexUtils::Formatter::Format(INDENT "Loaded %s.", pluginsToLoad[i].c_str());
-        g_Console.Success(message);
+        g_Console.Success(XexUtils::Formatter::Format(INDENT "Unloaded \"%s\".", pluginsToLoad[i].c_str()));
     }
 
     return hr;
