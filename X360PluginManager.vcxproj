@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Xbox 360">
+      <Configuration>Debug</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Xbox 360">
+      <Configuration>Release</Configuration>
+      <Platform>Xbox 360</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E45E12DB-5F26-46CF-A07F-38F816EB2FAC}</ProjectGuid>
+    <Keyword>Xbox360Proj</Keyword>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="deps\XexUtils\XexUtils.vcxproj">
+      <Project>{c598d106-4f6d-4505-95de-aa896a0ac7fa}</Project>
+    </ProjectReference>
+    <ProjectReference Include="deps\AtgFramework\AtgFramework.vcxproj">
+      <Project>{91d208a6-9936-47fd-9659-67205c3eb0ab}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>2010-01</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)build\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\obj\</IntDir>
+    <RemoteRoot>hdd:\Games\$(ProjectName)</RemoteRoot>
+    <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    <ImageXexOutput>$(OutDir)default.xex</ImageXexOutput>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)deps\XexUtils\include;$(XEDK)\Source\Samples\Common</AdditionalIncludeDirectories>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>$(IntDir)$(ProjectName)\%(RelativeDir)</ObjectFileName>
+      <DebugInformationFormat Condition="'$(Configuration)'=='Debug'">ProgramDatabase</DebugInformationFormat>
+      <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)'=='Release'">Full</Optimization>
+      <FunctionLevelLinking Condition="'$(Configuration)'=='Release'">true</FunctionLevelLinking>
+      <StringPooling Condition="'$(Configuration)'=='Release'">true</StringPooling>
+      <IntrinsicFunctions Condition="'$(Configuration)'=='Release'">true</IntrinsicFunctions>
+      <FavorSizeOrSpeed Condition="'$(Configuration)'=='Release'">Size</FavorSizeOrSpeed>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Debug'">_DEBUG;_XBOX</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)'=='Release'">NDEBUG;_XBOX</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies Condition="'$(Configuration)'=='Debug'">xapilibd.lib;d3d9d.lib;d3dx9d.lib;xgraphicsd.lib</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)'=='Release'">xapilib.lib;d3d9.lib;d3dx9.lib;xgraphics.lib</AdditionalDependencies>
+      <GenerateDebugInformation Condition="'$(Configuration)'=='Debug'">true</GenerateDebugInformation>
+      <ProgramDatabaseFile Condition="'$(Configuration)'=='Debug'">$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <OptimizeReferences Condition="'$(Configuration)'=='Release'">true</OptimizeReferences>
+      <SetChecksum Condition="'$(Configuration)'=='Release'">true</SetChecksum>
+    </Link>
+    <Deploy>
+      <DeploymentType>CopyToHardDrive</DeploymentType>
+      <DeploymentFiles>$(RemoteRoot)=$(ImagePath);$(RemoteRoot)\Media=$(OutDir)Media</DeploymentFiles>
+    </Deploy>
+    <ImageXex>
+      <ConfigurationFile>$(SolutionDir)config.xml</ConfigurationFile>
+    </ImageXex>
+    <PostBuildEvent>
+      <Command>"$(XEDK)\bin\win32\xbreboot.exe" $(RemotePath)</Command>
+      <Message>Launch $(RemotePath) after it's built</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Console.h" />
+    <ClInclude Include="src\pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="$(XEDK)\Source\Samples\Media\Fonts\Arial_16.rdf">
+      <Command>bundler "%(FullPath)" -o "$(OutDir)Media\Fonts\%(Filename).xpr"</Command>
+      <Message>Create a bundled resource file from %(FullPath)</Message>
+      <Outputs>$(OutDir)Media\Fonts\%(Filename).xpr</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
