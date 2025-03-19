@@ -7,15 +7,27 @@ public:
 
     HRESULT Create();
 
-    void Print(const std::wstring &text);
+    void Info(const std::string &text);
 
-    void Print(const std::string &text);
+    void Success(const std::string &text);
+
+    void Warn(const std::string &text);
+
+    void Error(const std::string &text);
 
     void Update();
 
     void Render();
 
 private:
+    struct Line
+    {
+        Line(const std::wstring &text, D3DCOLOR color);
+
+        std::wstring Text;
+        D3DCOLOR Color;
+    };
+
     static const uint32_t s_DisplayWidth = 1280;
     static const uint32_t s_DisplayHeight = 720;
     static const uint32_t s_SafeAreaPercentage = 90;
@@ -32,5 +44,7 @@ private:
     float m_LineHeight;
     size_t m_MaxLinesToDisplay;
     uint32_t m_FirstLineIndex;
-    std::vector<std::wstring> m_Lines;
+    std::vector<Line> m_Lines;
+
+    void Print(const Line &line);
 };

@@ -58,18 +58,24 @@ HRESULT Console::Create()
 
 #pragma warning(pop)
 
-void Console::Print(const std::wstring &text)
+void Console::Info(const std::string &text)
 {
-    m_Lines.emplace_back(text);
-
-    // If the number of lines goes beyond what can be displayed, scroll down automatically
-    if (m_Lines.size() > m_MaxLinesToDisplay)
-        m_FirstLineIndex = m_Lines.size() - m_MaxLinesToDisplay;
+    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(205, 214, 244)));
 }
 
-void Console::Print(const std::string &text)
+void Console::Success(const std::string &text)
 {
-    Print(XexUtils::Formatter::ToWide(text));
+    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(166, 227, 161)));
+}
+
+void Console::Warn(const std::string &text)
+{
+    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(249, 226, 175)));
+}
+
+void Console::Error(const std::string &text)
+{
+    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(243, 139, 168)));
 }
 
 void Console::Update()
@@ -98,7 +104,7 @@ void Console::Update()
 
 void Console::Render()
 {
-    ATG::RenderBackground(D3DCOLOR_XRGB(31, 0, 95), D3DCOLOR_XRGB(31, 0, 95));
+    ATG::RenderBackground(D3DCOLOR_XRGB(30, 30, 46), D3DCOLOR_XRGB(30, 30, 46));
 
     // Calculate the offset needed to force the last line to be at the bottom of the screen,
     // this offset is 0 when the number of lines is greater than the number of lines that can be displayed
@@ -108,12 +114,27 @@ void Console::Render()
 
     for (size_t i = 0; i < std::min<size_t>(m_Lines.size(), m_MaxLinesToDisplay); i++)
     {
+        const Line &line = m_Lines[m_FirstLineIndex + i];
         float x = static_cast<float>(s_SafeAreaOffsetX);
         float y = static_cast<float>(s_SafeAreaOffsetY) + yOffset + m_LineHeight * i;
-        m_Font.DrawText(x, y, D3DCOLOR_XRGB(255, 255, 255), m_Lines[m_FirstLineIndex + i].c_str());
+        m_Font.DrawText(x, y, line.Color, line.Text.c_str());
     }
 
     m_Font.End();
 
     s_pd3dDevice->Present(nullptr, nullptr, nullptr, nullptr);
+}
+
+Console::Line::Line(const std::wstring &text, D3DCOLOR color)
+    : Text(text), Color(color)
+{
+}
+
+void Console::Print(const Line &line)
+{
+    m_Lines.emplace_back(line);
+
+    // If the number of lines goes beyond what can be displayed, scroll down automatically
+    if (m_Lines.size() > m_MaxLinesToDisplay)
+        m_FirstLineIndex = m_Lines.size() - m_MaxLinesToDisplay;
 }
