@@ -11,6 +11,7 @@
 
 // XexUtils
 #include <XexUtils.h>
+using namespace XexUtils;
 
 // AtgFramework
 #include <AtgDevice.h>

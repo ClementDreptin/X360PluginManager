@@ -51,7 +51,7 @@ static HRESULT LoadPlugins()
         std::ifstream file(pluginPath);
         if (!file.good())
         {
-            g_Console.Warn(XexUtils::Formatter::Format(INDENT "\"%s\" doesn't exist, skipping.", pluginPath.c_str()));
+            g_Console.Warn(Formatter::Format(INDENT "\"%s\" doesn't exist, skipping.", pluginPath.c_str()));
             continue;
         }
 
@@ -59,11 +59,11 @@ static HRESULT LoadPlugins()
         hr = XexLoadImage(pluginPath.c_str(), XEX_LOADING_FLAG_DLL, 0, nullptr);
         if (FAILED(hr))
         {
-            g_Console.Error(XexUtils::Formatter::Format(INDENT "Failed to load \"%s\" (%x).", pluginPath.c_str(), hr));
+            g_Console.Error(Formatter::Format(INDENT "Failed to load \"%s\" (%x).", pluginPath.c_str(), hr));
             continue;
         }
 
-        g_Console.Success(XexUtils::Formatter::Format(INDENT "Loaded \"%s\".", pluginsToLoad[i].c_str()));
+        g_Console.Success(Formatter::Format(INDENT "Loaded \"%s\".", pluginsToLoad[i].c_str()));
     }
 
     return hr;
@@ -90,11 +90,11 @@ static HRESULT UnloadPlugins()
         HANDLE handle = GetModuleHandle(pluginPath.c_str());
         if (handle == nullptr)
         {
-            g_Console.Warn(XexUtils::Formatter::Format(INDENT "\"%s\" is not loaded, skipping.", pluginPath.c_str()));
+            g_Console.Warn(Formatter::Format(INDENT "\"%s\" is not loaded, skipping.", pluginPath.c_str()));
             continue;
         }
 
-        g_Console.Success(XexUtils::Formatter::Format(INDENT "Unloaded \"%s\".", pluginsToLoad[i].c_str()));
+        g_Console.Success(Formatter::Format(INDENT "Unloaded \"%s\".", pluginsToLoad[i].c_str()));
     }
 
     return hr;
@@ -102,7 +102,7 @@ static HRESULT UnloadPlugins()
 
 static uint32_t WorkerThread(void *)
 {
-    HRESULT hr = XexUtils::Xam::MountHdd();
+    HRESULT hr = Xam::MountHdd();
     if (FAILED(hr))
     {
         g_Console.Error("Couldn't mound HDD.");

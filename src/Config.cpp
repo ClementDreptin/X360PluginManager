@@ -26,7 +26,7 @@ HRESULT Config::LoadFromDisk()
     {
         for (size_t i = 0; i < MAX_PLUGIN_COUNT; i++)
         {
-            std::string key = XexUtils::Formatter::Format("plugin%d", i + 1);
+            std::string key = Formatter::Format("plugin%d", i + 1);
             if (m_Structure["load"].has(key) && !m_Structure["load"][key].empty())
                 m_PluginsToLoad.push_back(m_Structure["load"][key]);
         }
@@ -37,7 +37,7 @@ HRESULT Config::LoadFromDisk()
     {
         for (size_t i = 0; i < MAX_PLUGIN_COUNT; i++)
         {
-            std::string key = XexUtils::Formatter::Format("plugin%d", i + 1);
+            std::string key = Formatter::Format("plugin%d", i + 1);
             if (m_Structure["unload"].has(key) && !m_Structure["unload"][key].empty())
                 m_PluginsToUnload.push_back(m_Structure["unload"][key]);
         }

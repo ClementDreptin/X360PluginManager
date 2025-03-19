@@ -60,27 +60,27 @@ HRESULT Console::Create()
 
 void Console::Info(const std::string &text)
 {
-    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(205, 214, 244)));
+    Print(Line(Formatter::ToWide(text), D3DCOLOR_XRGB(205, 214, 244)));
 }
 
 void Console::Success(const std::string &text)
 {
-    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(166, 227, 161)));
+    Print(Line(Formatter::ToWide(text), D3DCOLOR_XRGB(166, 227, 161)));
 }
 
 void Console::Warn(const std::string &text)
 {
-    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(249, 226, 175)));
+    Print(Line(Formatter::ToWide(text), D3DCOLOR_XRGB(249, 226, 175)));
 }
 
 void Console::Error(const std::string &text)
 {
-    Print(Line(XexUtils::Formatter::ToWide(text), D3DCOLOR_XRGB(243, 139, 168)));
+    Print(Line(Formatter::ToWide(text), D3DCOLOR_XRGB(243, 139, 168)));
 }
 
 void Console::Update()
 {
-    XexUtils::Input::Gamepad *pGamepad = XexUtils::Input::GetInput();
+    Input::Gamepad *pGamepad = Input::GetInput();
 
     XASSERT(pGamepad != nullptr);
 
