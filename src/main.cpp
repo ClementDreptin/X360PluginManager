@@ -3,41 +3,104 @@
 #include "Config.h"
 #include "Console.h"
 
+#define INDENT "    "
+#define BLANKLINE ""
+
 Config g_Config;
 Console g_Console;
 
-uint32_t WorkerThread(void *)
+static HRESULT LoadPlugins()
 {
-    HRESULT hr = g_Config.LoadFromDisk();
+    HRESULT hr = S_OK;
+
+    const std::vector<std::string> &pluginsToLoad = g_Config.GetPluginsToLoad();
+    if (pluginsToLoad.empty())
+    {
+        g_Console.Info("No plugins to load.");
+        return hr;
+    }
+
+    g_Console.Info("Loading plugins...");
+
+    for (size_t i = 0; i < pluginsToLoad.size(); i++)
+    {
+        const std::string &pluginPath = pluginsToLoad[i];
+
+        // Check if the file exists on disk
+        std::ifstream file(pluginPath);
+        if (!file.good())
+        {
+            g_Console.Warn(INDENT + pluginPath + " doesn't exist, skipping.");
+            continue;
+        }
+
+        std::string message = XexUtils::Formatter::Format(INDENT "Loaded %s.", pluginsToLoad[i].c_str());
+        g_Console.Success(message);
+    }
+
+    return hr;
+}
+
+static HRESULT UnloadPlugins()
+{
+    HRESULT hr = S_OK;
+
+    const std::vector<std::string> &pluginsToLoad = g_Config.GetPluginsToLoad();
+    if (pluginsToLoad.empty())
+    {
+        g_Console.Info("No plugins to unload.");
+        return hr;
+    }
+
+    g_Console.Info("Unloading plugins...");
+
+    for (size_t i = 0; i < pluginsToLoad.size(); i++)
+    {
+        const std::string &pluginPath = pluginsToLoad[i];
+
+        // Check if the plugin is already loaded
+        HANDLE handle = GetModuleHandle(pluginPath.c_str());
+        if (handle == nullptr)
+        {
+            g_Console.Warn(INDENT + pluginPath + " not loaded, skipping.");
+            continue;
+        }
+
+        std::string message = XexUtils::Formatter::Format(INDENT "Loaded %s.", pluginsToLoad[i].c_str());
+        g_Console.Success(message);
+    }
+
+    return hr;
+}
+
+static uint32_t WorkerThread(void *)
+{
+    HRESULT hr = XexUtils::Xam::MountHdd();
+    if (FAILED(hr))
+    {
+        g_Console.Error("Couldn't mound HDD.");
+        return 1;
+    }
+
+    g_Console.Info(BLANKLINE);
+
+    hr = g_Config.LoadFromDisk();
     if (FAILED(hr))
         return 1;
 
-    const std::vector<std::string> &pluginsToUnload = g_Config.GetPluginsToUnload();
-    const std::vector<std::string> &pluginsToLoad = g_Config.GetPluginsToLoad();
+    g_Console.Info(BLANKLINE);
 
-    if (!pluginsToUnload.empty())
-    {
-        for (size_t i = 0; i < pluginsToUnload.size(); i++)
-        {
-            std::string message = XexUtils::Formatter::Format("Unloaded %s.", pluginsToUnload[i].c_str());
-            g_Console.Success(message);
-        }
-    }
-    else
-        g_Console.Info("No plugins to unload.");
+    hr = UnloadPlugins();
+    if (FAILED(hr))
+        return 1;
 
-    if (!pluginsToLoad.empty())
-    {
-        for (size_t i = 0; i < pluginsToLoad.size(); i++)
-        {
-            std::string message = XexUtils::Formatter::Format("Loaded %s.", pluginsToLoad[i].c_str());
-            g_Console.Success(message);
-        }
-    }
-    else
-        g_Console.Info("No plugins to load.");
+    g_Console.Info(BLANKLINE);
 
-    g_Console.Info("");
+    hr = LoadPlugins();
+    if (FAILED(hr))
+        return 1;
+
+    g_Console.Info(BLANKLINE);
     g_Console.Info("All done! You can close X360PluginManager now.");
 
     return 0;

@@ -5,6 +5,7 @@
 
 // C++ standard library
 #include <cstdint>
+#include <fstream>
 #include <string>
 #include <vector>
 
