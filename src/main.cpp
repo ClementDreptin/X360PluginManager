@@ -9,32 +9,6 @@
 Config g_Config;
 Console g_Console;
 
-// TODO: Move these declarations to XexUtils
-
-typedef enum _XEX_LOADING_FLAG
-{
-    XEX_LOADING_FLAG_TITLE_PROCESS = 1 << 0,
-    XEX_LOADING_FLAG_TITLE_IMPORTS = 1 << 1,
-    XEX_LOADING_FLAG_DEBUGGER = 1 << 2,
-    XEX_LOADING_FLAG_DLL = 1 << 3,
-    XEX_LOADING_FLAG_PATCH = 1 << 4,
-    XEX_LOADING_FLAG_PATCH_FULL = 1 << 5,
-    XEX_LOADING_FLAG_PATCH_DELTA = 1 << 6,
-    XEX_LOADING_FLAG_BOUND_PATH = 1 << 30,
-    XEX_LOADING_FLAG_SILENT_LOAD = 1 << 31,
-    XEX_LOADING_TYPE_TITLE = XEX_LOADING_FLAG_TITLE_PROCESS,
-    XEX_LOADING_TYPE_TITLE_DLL = XEX_LOADING_FLAG_TITLE_PROCESS | XEX_LOADING_FLAG_DLL,
-    XEX_LOADING_TYPE_SYSTEM_APP = XEX_LOADING_FLAG_DLL,
-    XEX_LOADING_TYPE_SYSTEM_DLL = XEX_LOADING_FLAG_DLL | XEX_LOADING_FLAG_TITLE_IMPORTS,
-} XEX_LOADING_FLAG;
-
-extern "C"
-{
-    HRESULT XexLoadImage(const char *imageName, XEX_LOADING_FLAG flags, uint32_t minVersion, HANDLE *pHandle);
-
-    HRESULT XexUnloadImage(HANDLE handle);
-}
-
 static HRESULT LoadPlugins()
 {
     HRESULT hr = S_OK;
@@ -159,20 +133,15 @@ void __cdecl main()
 
     // Start a system thread to load the plugins, plugins are almost always system DLLs and those
     // can only be loaded from system threads
-    // TODO: Use XexUtils once the threading API is more flexible
-    HANDLE hThread = nullptr;
-    ExCreateThread(
-        &hThread,
-        0,
-        nullptr,
-        nullptr,
-        reinterpret_cast<LPTHREAD_START_ROUTINE>(WorkerThread),
+    HANDLE threadHandle = Memory::ThreadEx(
+        reinterpret_cast<PTHREAD_START_ROUTINE>(WorkerThread),
         nullptr,
         static_cast<EXCREATETHREAD_FLAG>(EXCREATETHREAD_SYSTEM | EXCREATETHREAD_SUSPENDED)
     );
-    XSetThreadProcessor(hThread, 4); // System threads can't be started on the same hardware thread as the title
-    ResumeThread(hThread);
+    XSetThreadProcessor(threadHandle, 4); // System threads can't be started on the same hardware thread as the title
+    ResumeThread(threadHandle);
 
+    // Main update/render loop
     for (;;)
     {
         g_Console.Update();
