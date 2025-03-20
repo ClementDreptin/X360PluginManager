@@ -28,7 +28,12 @@ typedef enum _XEX_LOADING_FLAG
     XEX_LOADING_TYPE_SYSTEM_DLL = XEX_LOADING_FLAG_DLL | XEX_LOADING_FLAG_TITLE_IMPORTS,
 } XEX_LOADING_FLAG;
 
-extern "C" HRESULT XexLoadImage(const char *imageName, XEX_LOADING_FLAG flags, uint32_t minVersion, HANDLE *pHandle);
+extern "C"
+{
+    HRESULT XexLoadImage(const char *imageName, XEX_LOADING_FLAG flags, uint32_t minVersion, HANDLE *pHandle);
+
+    HRESULT XexUnloadImage(HANDLE handle);
+}
 
 static HRESULT LoadPlugins()
 {
@@ -73,8 +78,8 @@ static HRESULT UnloadPlugins()
 {
     HRESULT hr = S_OK;
 
-    const std::vector<std::string> &pluginsToLoad = g_Config.GetPluginsToLoad();
-    if (pluginsToLoad.empty())
+    const std::vector<std::string> &pluginsToUnload = g_Config.GetPluginsToUnload();
+    if (pluginsToUnload.empty())
     {
         g_Console.Info("No plugins to unload.");
         return hr;
@@ -82,9 +87,9 @@ static HRESULT UnloadPlugins()
 
     g_Console.Info("Unloading plugins...");
 
-    for (size_t i = 0; i < pluginsToLoad.size(); i++)
+    for (size_t i = 0; i < pluginsToUnload.size(); i++)
     {
-        const std::string &pluginPath = pluginsToLoad[i];
+        const std::string &pluginPath = pluginsToUnload[i];
 
         // Check if the plugin is already loaded
         HANDLE handle = GetModuleHandle(pluginPath.c_str());
@@ -94,7 +99,20 @@ static HRESULT UnloadPlugins()
             continue;
         }
 
-        g_Console.Success(Formatter::Format(INDENT "Unloaded \"%s\".", pluginsToLoad[i].c_str()));
+        // The plugin load count is normally set to 0xFFFF (I don't know why) so we need to set it to 1
+        // to make XexUnloadImage actually unmap the plugin
+        LDR_DATA_TABLE_ENTRY *pDataTable = static_cast<LDR_DATA_TABLE_ENTRY *>(handle);
+        pDataTable->LoadCount = 1;
+
+        // Unload the plugin
+        hr = XexUnloadImage(handle);
+        if (FAILED(hr))
+        {
+            g_Console.Error(Formatter::Format(INDENT "Failed to unload \"%s\" (%x).", pluginPath.c_str(), hr));
+            continue;
+        }
+
+        g_Console.Success(Formatter::Format(INDENT "Unloaded \"%s\".", pluginsToUnload[i].c_str()));
     }
 
     return hr;
