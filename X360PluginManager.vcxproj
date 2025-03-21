@@ -77,9 +77,6 @@
       <DeploymentType>CopyToHardDrive</DeploymentType>
       <DeploymentFiles>$(RemoteRoot)=$(ImagePath);$(RemoteRoot)\Media=$(OutDir)Media;$(RemoteRoot)=$(ProjectDir)src\config.ini</DeploymentFiles>
     </Deploy>
-    <ImageXex>
-      <ConfigurationFile>$(SolutionDir)config.xml</ConfigurationFile>
-    </ImageXex>
     <PostBuildEvent>
       <Command>"$(XEDK)\bin\win32\xbreboot.exe" $(RemotePath)</Command>
       <Message>Launch $(RemotePath) after it's built</Message>
