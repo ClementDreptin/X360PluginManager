@@ -26,6 +26,14 @@ static HRESULT LoadPlugins()
     {
         const std::string &pluginPath = pluginsToLoad[i];
 
+        // Check if the plugin is already loaded
+        HANDLE handle = GetModuleHandle(pluginPath.c_str());
+        if (handle != nullptr)
+        {
+            g_Console.Warn(Formatter::Format(INDENT "\"%s\" is already loaded, skipping.", pluginPath.c_str()));
+            continue;
+        }
+
         // Check if the file exists on disk
         std::ifstream file(pluginPath);
         if (!file.good())
