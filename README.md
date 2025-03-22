@@ -44,6 +44,12 @@ It's safe to specify a plugin that isn't already loaded in `[unload]`, it will j
 
 ## Building
 
+Clone the repository and the submodule:
+
+```
+git clone --recursive https://github.com/ClementDreptin/X360PluginManager.git
+```
+
 ### Requirements
 
 -   Having the Xbox 360 Software Development Kit (XDK) installed.
