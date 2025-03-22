@@ -6,6 +6,10 @@
 #define INDENT "    "
 #define BLANKLINE ""
 
+// Found here:
+// https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
+#define NTSTATUS_OBJECT_NAME_COLLISION 0xC0000035
+
 Config g_Config;
 Console g_Console;
 
@@ -46,7 +50,7 @@ static HRESULT LoadPlugins()
         hr = XexLoadImage(pluginPath.c_str(), XEX_LOADING_FLAG_DLL, 0, nullptr);
         if (FAILED(hr))
         {
-            g_Console.Error(Formatter::Format(INDENT "Failed to load \"%s\" (%x).", pluginPath.c_str(), hr));
+            g_Console.Error(Formatter::Format(INDENT "Failed to load \"%s\" (%X).", pluginPath.c_str(), hr));
             continue;
         }
 
@@ -90,7 +94,7 @@ static HRESULT UnloadPlugins()
         hr = XexUnloadImage(handle);
         if (FAILED(hr))
         {
-            g_Console.Error(Formatter::Format(INDENT "Failed to unload \"%s\" (%x).", pluginPath.c_str(), hr));
+            g_Console.Error(Formatter::Format(INDENT "Failed to unload \"%s\" (%X).", pluginPath.c_str(), hr));
             continue;
         }
 
@@ -102,10 +106,13 @@ static HRESULT UnloadPlugins()
 
 static uint32_t WorkerThread(void *)
 {
+    // Collisions are expected because, when running on a console with Dashlaunch, there is
+    // already a system symlink named "hdd:". Collisions can also happen when running the app
+    // multiple times because system symlinks continue to live after the app exits.
     HRESULT hr = Xam::MountHdd();
-    if (FAILED(hr))
+    if (FAILED(hr) && hr != NTSTATUS_OBJECT_NAME_COLLISION)
     {
-        g_Console.Error("Couldn't mound HDD.");
+        g_Console.Error(Formatter::Format("Couldn't mound HDD. (%X)", hr));
         return 1;
     }
 
@@ -137,7 +144,7 @@ void __cdecl main()
 {
     HRESULT hr = g_Console.Create();
     if (FAILED(hr))
-        ATG::FatalError("Failed to create console: %x\n", hr);
+        ATG::FatalError("Failed to create console: %X\n", hr);
 
     // Start a system thread to load the plugins, plugins are almost always system DLLs and those
     // can only be loaded from system threads
