@@ -2,7 +2,7 @@
 
 Utility app to load and unload plugins from an Xbox 360.
 
-<p style="text-align:center"><img src="./resources/screenshots/example.jpg" alt="Example output of X360PluginManager" /></p>
+<p align="center"><img src="./resources/screenshots/example.jpg" alt="Example output of X360PluginManager" /></p>
 
 > [!NOTE]
 > This app is primarly for people using the [Bad Update exploit](https://github.com/grimdoomer/Xbox360BadUpdate) who can't load plugins via Dashlaunch (as of March 22nd 2025). If Dashlaunch becomes available for the [Bad Update exploit](https://github.com/grimdoomer/Xbox360BadUpdate), please use that instead.
