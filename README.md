@@ -22,7 +22,7 @@ The file has the following format:
 ```ini
 [load]
 plugin1 = hdd:\path\to\plugin1.xex
-plugin2 = hdd:\path\to\plugin2.xex
+plugin2 = usb:\path\to\plugin2.xex
 plugin3 =
 plugin4 =
 plugin5 =
@@ -39,8 +39,7 @@ Pretty self explanatory, the plugins under `[load]` will be loaded and the ones 
 
 It's safe to specify a plugin that isn't already loaded in `[unload]`, it will just be skipped. It's also safe to specify a wrong path, it will also be skipped.
 
-> [!WARNING]
-> Plugins can only be loaded or unloaded from the **hard drive**, so not a **USB**, and the root of your hard drive is referred to as `hdd:\`.
+Plugins can either be loaded from the hard drive using the `hdd:` device name, or from the first USB device using the `usb:` device name.
 
 ## Building
 

@@ -107,12 +107,20 @@ static HRESULT UnloadPlugins()
 static uint32_t WorkerThread(void *)
 {
     // Collisions are expected because, when running on a console with Dashlaunch, there is
-    // already a system symlink named "hdd:". Collisions can also happen when running the app
+    // already system symlinks named "hdd:" and "usb:". Collisions can also happen when running the app
     // multiple times because system symlinks continue to live after the app exits.
+
     HRESULT hr = Xam::MountHdd();
     if (FAILED(hr) && hr != NTSTATUS_OBJECT_NAME_COLLISION)
     {
         g_Console.Error(Formatter::Format("Couldn't mound HDD. (%X)", hr));
+        return 1;
+    }
+
+    hr = Xam::MountUsb();
+    if (FAILED(hr) && hr != NTSTATUS_OBJECT_NAME_COLLISION)
+    {
+        g_Console.Error(Formatter::Format("Couldn't mound USB. (%X)", hr));
         return 1;
     }
 
