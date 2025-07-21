@@ -5,6 +5,12 @@
 
 Console::Console()
 {
+    InitializeCriticalSection(&m_LinesCriticalSection);
+}
+
+Console::~Console()
+{
+    DeleteCriticalSection(&m_LinesCriticalSection);
 }
 
 void Console::Info(const std::string &text)
@@ -42,8 +48,12 @@ void Console::Render()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
     ImGui::Begin("Logs", nullptr, windowFlags);
 
+    // Lock the lines before rendering them, this is because the print functions can be
+    // called from other threads
+    EnterCriticalSection(&m_LinesCriticalSection);
     for (size_t i = 0; i < m_Lines.size(); i++)
         ImGui::TextColored(m_Lines[i].Color, m_Lines[i].Text.c_str());
+    LeaveCriticalSection(&m_LinesCriticalSection);
 
     ImGui::End();
     ImGui::PopStyleVar();
@@ -56,5 +66,9 @@ Console::Line::Line(const std::string &text, const ImVec4 &color)
 
 void Console::Print(const Line &line)
 {
+    // Lock the lines before mutating them, this is because the print functions can be
+    // called from other threads
+    EnterCriticalSection(&m_LinesCriticalSection);
     m_Lines.emplace_back(line);
+    LeaveCriticalSection(&m_LinesCriticalSection);
 }
