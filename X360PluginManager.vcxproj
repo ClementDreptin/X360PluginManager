@@ -18,8 +18,8 @@
     <ProjectReference Include="deps\XexUtils\XexUtils.vcxproj">
       <Project>{c598d106-4f6d-4505-95de-aa896a0ac7fa}</Project>
     </ProjectReference>
-    <ProjectReference Include="deps\AtgFramework\AtgFramework.vcxproj">
-      <Project>{91d208a6-9936-47fd-9659-67205c3eb0ab}</Project>
+    <ProjectReference Include="deps\ImGui.vcxproj">
+      <Project>{4165a294-21f2-44ca-9b38-e3f935abadf5}</Project>
     </ProjectReference>
     <ProjectReference Include="deps\mINI\mINI.vcxproj">
       <Project>{32e6acfe-ecd5-41e4-afef-675d74786e96}</Project>
@@ -45,7 +45,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)deps\XexUtils\include;$(XEDK)\Source\Samples\Common;$(SolutionDir)deps\mINI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)deps\XexUtils\include;$(SolutionDir)deps\ImGui;$(SolutionDir)deps\mINI</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -75,7 +75,7 @@
     </Link>
     <Deploy>
       <DeploymentType>CopyToHardDrive</DeploymentType>
-      <DeploymentFiles>$(RemoteRoot)=$(ImagePath);$(RemoteRoot)\Media=$(OutDir)Media;$(RemoteRoot)=$(ProjectDir)src\config.ini</DeploymentFiles>
+      <DeploymentFiles>$(RemoteRoot)=$(ImagePath);$(RemoteRoot)=$(ProjectDir)src\config.ini</DeploymentFiles>
     </Deploy>
     <PostBuildEvent>
       <Command>"$(XEDK)\bin\win32\xbreboot.exe" $(RemotePath)</Command>
@@ -85,21 +85,22 @@
   <ItemGroup>
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\Console.h" />
+    <ClInclude Include="src\Modules.h" />
+    <ClInclude Include="src\UI.h" />
+    <ClInclude Include="src\imgui_impl_dx9.h" />
+    <ClInclude Include="src\imgui_impl_xbox360.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="src\Modules.cpp" />
+    <ClCompile Include="src\UI.cpp" />
+    <ClCompile Include="src\imgui_impl_dx9.cpp" />
+    <ClCompile Include="src\imgui_impl_xbox360.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="$(XEDK)\Source\Samples\Media\Fonts\Arial_16.rdf">
-      <Command>bundler "%(FullPath)" -o "$(OutDir)Media\Fonts\%(Filename).xpr"</Command>
-      <Message>Create a bundled resource file from %(FullPath)</Message>
-      <Outputs>$(OutDir)Media\Fonts\%(Filename).xpr</Outputs>
-    </CustomBuild>
   </ItemGroup>
 </Project>

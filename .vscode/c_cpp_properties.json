@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/deps/XexUtils/include",
-                "${env:XEDK}/Source/Samples/Common",
+                "${workspaceFolder}/deps/ImGui",
                 "${workspaceFolder}/deps/mINI",
                 "${env:XEDK}/include/xbox"
             ],
@@ -17,7 +17,7 @@
             "includePath": [
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/deps/XexUtils/include",
-                "${env:XEDK}/Source/Samples/Common",
+                "${workspaceFolder}/deps/ImGui",
                 "${workspaceFolder}/deps/mINI",
                 "${env:XEDK}/include/xbox"
             ],

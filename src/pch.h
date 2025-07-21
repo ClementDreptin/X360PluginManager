@@ -13,7 +13,5 @@
 #include <XexUtils.h>
 using namespace XexUtils;
 
-// AtgFramework
-#include <AtgDevice.h>
-#include <AtgFont.h>
-#include <AtgUtil.h>
+// ImGui
+#include <imgui.h>
