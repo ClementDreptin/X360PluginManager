@@ -36,8 +36,8 @@ void Console::Error(const std::string &text)
 void Console::Render()
 {
     const ImVec2 &padding = ImGui::GetStyle().WindowPadding;
-    ImVec2 windowPos(UI::SafeAreaOffsetX, UI::DisplayHeight / 2.0f + padding.y / 2.0f);
-    ImVec2 windowSize(UI::SafeAreaWidth, UI::SafeAreaHeight / 2.0f - padding.y / 2.0f);
+    ImVec2 windowPos(UI::SafeAreaOffsetX + UI::SafeAreaWidth / 2.0f + padding.x / 2.0f, UI::SafeAreaOffsetY);
+    ImVec2 windowSize(UI::SafeAreaWidth / 2.0f - padding.x / 2.0f, UI::SafeAreaHeight);
 
     ImGuiWindowFlags windowFlags =
         ImGuiWindowFlags_NoCollapse |
