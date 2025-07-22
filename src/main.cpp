@@ -2,11 +2,12 @@
 
 #include "Config.h"
 #include "Console.h"
-#include "Modules.h"
+#include "PluginManager.h"
 #include "UI.h"
 
 Config g_Config;
 Console g_Console;
+PluginManager g_PluginManager;
 
 void __cdecl main()
 {
@@ -14,21 +15,16 @@ void __cdecl main()
     if (FAILED(hr))
         return;
 
-    // Start a system thread to load the plugins, plugins are almost always system DLLs and those
-    // can only be loaded from system threads
-    HANDLE threadHandle = Memory::ThreadEx(
-        reinterpret_cast<PTHREAD_START_ROUTINE>(Modules::DoWork),
-        nullptr,
-        static_cast<EXCREATETHREAD_FLAG>(EXCREATETHREAD_SYSTEM | EXCREATETHREAD_SUSPENDED)
-    );
-    XSetThreadProcessor(threadHandle, 4); // System threads can't be started on the same hardware thread as the title
-    ResumeThread(threadHandle);
+    // We intentionally continue even if the initialization failed because we need
+    // to show the potential error messages in the UI
+    g_PluginManager.Init();
 
     // Main loop
     for (;;)
     {
         UI::BeginFrame();
 
+        g_PluginManager.Render();
         g_Console.Render();
 
         UI::EndFrame();

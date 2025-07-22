@@ -85,7 +85,7 @@
   <ItemGroup>
     <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\Console.h" />
-    <ClInclude Include="src\Modules.h" />
+    <ClInclude Include="src\PluginManager.h" />
     <ClInclude Include="src\UI.h" />
     <ClInclude Include="src\imgui_impl_dx9.h" />
     <ClInclude Include="src\imgui_impl_xbox360.h" />
@@ -94,7 +94,7 @@
   <ItemGroup>
     <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\Console.cpp" />
-    <ClCompile Include="src\Modules.cpp" />
+    <ClCompile Include="src\PluginManager.cpp" />
     <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\imgui_impl_dx9.cpp" />
     <ClCompile Include="src\imgui_impl_xbox360.cpp" />

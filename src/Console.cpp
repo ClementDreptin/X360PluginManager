@@ -15,7 +15,7 @@ Console::~Console()
 
 void Console::Info(const std::string &text)
 {
-    Print(Line(text, ImVec4(0.80f, 0.84f, 0.96f, 1.0f)));
+    Print(Line(text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f)));
 }
 
 void Console::Success(const std::string &text)
@@ -41,8 +41,9 @@ void Console::Render()
 
     ImGuiWindowFlags windowFlags =
         ImGuiWindowFlags_NoCollapse |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoMove;
+        ImGuiWindowFlags_NoFocusOnAppearing |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoResize;
     ImGui::SetNextWindowPos(windowPos);
     ImGui::SetNextWindowSize(windowSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);

@@ -1,14 +1,11 @@
 #include "pch.h"
 #include "Config.h"
 
-#define MAX_PLUGIN_COUNT 5
+#include "Console.h"
 
 Config::Config()
     : m_File("game:\\config.ini")
 {
-    // Pre-allocate enough space for the max amount of plugins to load and/or unload
-    m_PluginsToLoad.reserve(MAX_PLUGIN_COUNT);
-    m_PluginsToUnload.reserve(MAX_PLUGIN_COUNT);
 }
 
 HRESULT Config::LoadFromDisk()
@@ -21,27 +18,24 @@ HRESULT Config::LoadFromDisk()
         return E_FAIL;
     }
 
-    // Plugins to load
-    if (m_Structure.has("load"))
+    // Make sure the file format is correct
+    if (!m_Structure.has("plugins_directory"))
     {
-        for (size_t i = 0; i < MAX_PLUGIN_COUNT; i++)
-        {
-            std::string key = Formatter::Format("plugin%d", i + 1);
-            if (m_Structure["load"].has(key) && !m_Structure["load"][key].empty())
-                m_PluginsToLoad.push_back(m_Structure["load"][key]);
-        }
+        g_Console.Error("Incorrect config file format. Expected to find a 'plugins_directory' section.");
+        return E_FAIL;
+    }
+    if (!m_Structure["plugins_directory"].has("path"))
+    {
+        g_Console.Error("Incorrect config file format. Expected to find a 'path' key under the 'plugins_directory' section.");
+        return E_FAIL;
+    }
+    if (m_Structure["plugins_directory"]["path"].empty())
+    {
+        g_Console.Error("Incorrect config file format. 'path' cannot be empty.");
+        return E_FAIL;
     }
 
-    // Plugins to unload
-    if (m_Structure.has("unload"))
-    {
-        for (size_t i = 0; i < MAX_PLUGIN_COUNT; i++)
-        {
-            std::string key = Formatter::Format("plugin%d", i + 1);
-            if (m_Structure["unload"].has(key) && !m_Structure["unload"][key].empty())
-                m_PluginsToUnload.push_back(m_Structure["unload"][key]);
-        }
-    }
+    m_PluginsDir = m_Structure["plugins_directory"]["path"];
 
     return S_OK;
 }

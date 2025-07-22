@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Console.h"
-
 #include <mINI.h>
 
 class Config
@@ -11,16 +9,13 @@ public:
 
     HRESULT LoadFromDisk();
 
-    inline const std::vector<std::string> &GetPluginsToLoad() { return m_PluginsToLoad; }
-
-    inline const std::vector<std::string> &GetPluginsToUnload() { return m_PluginsToUnload; }
+    inline const std::string &GetPluginsDir() { return m_PluginsDir; }
 
 private:
     mINI::INIFile m_File;
     mINI::INIStructure m_Structure;
 
-    std::vector<std::string> m_PluginsToLoad;
-    std::vector<std::string> m_PluginsToUnload;
+    std::string m_PluginsDir;
 };
 
 extern Config g_Config;
