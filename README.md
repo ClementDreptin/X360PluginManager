@@ -20,30 +20,17 @@ Utility app to load and unload plugins from an Xbox 360.
 The file has the following format:
 
 ```ini
-[load]
-plugin1 = hdd:\path\to\plugin1.xex
-plugin2 = usb:\path\to\plugin2.xex
-plugin3 =
-plugin4 =
-plugin5 =
-
-[unload]
-plugin1 = hdd:\path\to\plugin3.xex
-plugin2 =
-plugin3 =
-plugin4 =
-plugin5 =
+[plugins_directory]
+path = hdd:\path\to\plugins
 ```
 
-Pretty self explanatory, the plugins under `[load]` will be loaded and the ones under `[unload]` will be unloaded. You can put the same plugin in both `[load]` and `[unload]` to reload it.
-
-It's safe to specify a plugin that isn't already loaded in `[unload]`, it will just be skipped. It's also safe to specify a wrong path, it will also be skipped.
+Pretty self explanatory, `path` under `[plugins_directory]` is the directory where X360PluginManager will look for plugins to load or unload. This implies that all of your plugins are in the same directory. The search is **not** recursive, meaning you cannot put plugins inside of subdirectories.
 
 Plugins can either be loaded from the hard drive using the `hdd:` device name, or from the first USB device using the `usb:` device name.
 
 ## Building
 
-Clone the repository and the submodule:
+Clone the repository and the submodules:
 
 ```
 git clone --recursive https://github.com/ClementDreptin/X360PluginManager.git
