@@ -15,11 +15,6 @@ function Build {
     }
 }
 
-function PatchXexForRetail {
-    # You need to have XEX tool in your PATH
-    XexTool -m r $DefaultXexPath
-}
-
 function CreateZip {
     $OutputZip = "$RootDir\X360PluginManager.zip"
     $TmpDir = "$([System.IO.Path]::GetTempPath())\X360PluginManager"
@@ -28,7 +23,6 @@ function CreateZip {
     New-Item -ItemType Directory -Path $TmpDir -Force
 
     # Copy the appropriate files into the temporary directory
-    Copy-Item -Path "$BuildDir\Media" -Destination $TmpDir -Recurse
     Copy-Item -Path $DefaultXexPath -Destination $TmpDir
     Copy-Item -Path "$RootDir\src\config.ini" -Destination $TmpDir
 
@@ -40,7 +34,5 @@ function CreateZip {
 }
 
 Build
-
-PatchXexForRetail
 
 CreateZip
