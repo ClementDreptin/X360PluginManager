@@ -44,7 +44,9 @@ void PluginManager::Render()
         for (size_t i = 0; i < m_Plugins.size(); i++)
             ImGui::Checkbox(m_Plugins[i].Name.c_str(), &m_Plugins[i].NewLoadState);
 
-        if (ImGui::Button("Apply"))
+        ImGui::NewLine();
+
+        if (ImGui::Button("Apply changes"))
             ApplyChanges();
     }
     else
