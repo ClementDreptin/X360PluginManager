@@ -52,11 +52,26 @@ static void SetTheme()
     // Start from the base dark theme
     ImGui::StyleColorsDark();
 
-    auto &colors = ImGui::GetStyle().Colors;
+    const ImVec4 lavender(0.45f, 0.53f, 0.99f, 1.0f);
+
+    // General styles
+    auto &styles = ImGui::GetStyle();
+    styles.FrameRounding = 4.0f;
+    styles.WindowRounding = 4.0f;
+    styles.WindowPadding = ImVec2(12.0f, 12.0f);
+
+    // Colors
+    auto &colors = styles.Colors;
     colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.18f, 1.0f);
     colors[ImGuiCol_Border] = ImVec4(0.80f, 0.84f, 0.96f, 0.7f);
-    colors[ImGuiCol_TitleBg] = ImVec4(0.45f, 0.53f, 0.99f, 1.0f);
-    colors[ImGuiCol_TitleBgActive] = ImVec4(0.45f, 0.53f, 0.99f, 1.0f);
+    colors[ImGuiCol_TitleBg] = lavender;
+    colors[ImGuiCol_TitleBgActive] = lavender;
+    colors[ImGuiCol_CheckMark] = lavender;
+    colors[ImGuiCol_FrameBg] = ImVec4(0.19f, 0.20f, 0.27f, 1.0f);
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.42f, 0.44f, 0.53f, 0.7f);
+    colors[ImGuiCol_Button] = ImVec4(lavender.x, lavender.y, lavender.z, 0.6f);
+    colors[ImGuiCol_ButtonHovered] = lavender;
+    colors[ImGuiCol_NavHighlight] = lavender;
 }
 
 static HRESULT InitImGui()

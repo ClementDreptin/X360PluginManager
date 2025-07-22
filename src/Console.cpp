@@ -35,18 +35,19 @@ void Console::Error(const std::string &text)
 
 void Console::Render()
 {
+    // Place the window on the right half of the screen
     const ImVec2 &padding = ImGui::GetStyle().WindowPadding;
     ImVec2 windowPos(UI::SafeAreaOffsetX + UI::SafeAreaWidth / 2.0f + padding.x / 2.0f, UI::SafeAreaOffsetY);
     ImVec2 windowSize(UI::SafeAreaWidth / 2.0f - padding.x / 2.0f, UI::SafeAreaHeight);
+    ImGui::SetNextWindowPos(windowPos);
+    ImGui::SetNextWindowSize(windowSize);
 
+    // Create the window
     ImGuiWindowFlags windowFlags =
         ImGuiWindowFlags_NoCollapse |
         ImGuiWindowFlags_NoFocusOnAppearing |
         ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoResize;
-    ImGui::SetNextWindowPos(windowPos);
-    ImGui::SetNextWindowSize(windowSize);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
     ImGui::Begin("Logs", nullptr, windowFlags);
 
     // Lock the lines before rendering them, this is because the print functions can be
@@ -57,7 +58,6 @@ void Console::Render()
     LeaveCriticalSection(&m_LinesCriticalSection);
 
     ImGui::End();
-    ImGui::PopStyleVar();
 }
 
 Console::Line::Line(const std::string &text, const ImVec4 &color)

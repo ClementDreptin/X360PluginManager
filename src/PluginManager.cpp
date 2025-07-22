@@ -26,34 +26,38 @@ HRESULT PluginManager::Init()
 
 void PluginManager::Render()
 {
+    // Place the window on the right half of the screen
     const ImVec2 &padding = ImGui::GetStyle().WindowPadding;
     ImVec2 windowPos(UI::SafeAreaOffsetX, UI::SafeAreaOffsetY);
     ImVec2 windowSize(UI::SafeAreaWidth / 2.0f - padding.x / 2.0f, UI::SafeAreaHeight);
+    ImGui::SetNextWindowPos(windowPos);
+    ImGui::SetNextWindowSize(windowSize);
 
+    // Create the window
     ImGuiWindowFlags windowFlags =
         ImGuiWindowFlags_NoCollapse |
         ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoResize;
-    ImGui::SetNextWindowPos(windowPos);
-    ImGui::SetNextWindowSize(windowSize);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 4.0f);
     ImGui::Begin("Plugins", nullptr, windowFlags);
 
     if (!m_Plugins.empty())
     {
+        // Render a checkbox for each plugin
         for (size_t i = 0; i < m_Plugins.size(); i++)
             ImGui::Checkbox(m_Plugins[i].Name.c_str(), &m_Plugins[i].NewLoadState);
 
         ImGui::NewLine();
 
+        // Apply changes button
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5.0f, 5.0f));
         if (ImGui::Button("Apply changes"))
             ApplyChanges();
+        ImGui::PopStyleVar();
     }
     else
         ImGui::TextUnformatted("No plugins found.");
 
     ImGui::End();
-    ImGui::PopStyleVar();
 }
 
 HRESULT PluginManager::LoadPlugins()
