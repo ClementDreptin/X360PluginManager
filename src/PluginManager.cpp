@@ -165,7 +165,7 @@ HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
     }
 
     // Loop as long as there are files in the directory
-    while (FindNextFile(fileHandle, &fileInfo))
+    do
     {
         // Extract the extension from the file name
         char extension[_MAX_EXT] = {};
@@ -187,7 +187,7 @@ HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
             plugin.NewLoadState = plugin.Loaded;
             m_Plugins.emplace_back(plugin);
         }
-    }
+    } while (FindNextFile(fileHandle, &fileInfo));
 
     FindClose(fileHandle);
 
