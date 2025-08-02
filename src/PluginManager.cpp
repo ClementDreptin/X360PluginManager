@@ -153,7 +153,7 @@ HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
 {
     // Create the search pattern
     const std::string &pluginsDirWithFinalSeparator = pluginsDir.back() == '\\' ? pluginsDir : pluginsDir + '\\';
-    std::string searchPattern = pluginsDirWithFinalSeparator + "*.*";
+    std::string searchPattern = pluginsDirWithFinalSeparator + "*.xex";
 
     // Find the first file corresponding to the pattern
     WIN32_FIND_DATA fileInfo = {};
@@ -164,29 +164,15 @@ HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
         return E_FAIL;
     }
 
-    // Loop as long as there are files in the directory
+    // Loop as long as there are plugins in the directory
     do
     {
-        // Extract the extension from the file name
-        char extension[_MAX_EXT] = {};
-        _splitpath_s(
-            fileInfo.cFileName,
-            nullptr, 0,
-            nullptr, 0,
-            nullptr, 0,
-            extension, sizeof(extension)
-        );
-
-        // If the current file is a plugin, add its info to the list
-        if (strcmp(extension, ".xex") == 0)
-        {
-            Plugin plugin = {};
-            plugin.Name = fileInfo.cFileName;
-            plugin.Path = pluginsDirWithFinalSeparator + fileInfo.cFileName;
-            plugin.Loaded = GetModuleHandle(fileInfo.cFileName) != nullptr;
-            plugin.NewLoadState = plugin.Loaded;
-            m_Plugins.emplace_back(plugin);
-        }
+        Plugin plugin = {};
+        plugin.Name = fileInfo.cFileName;
+        plugin.Path = pluginsDirWithFinalSeparator + fileInfo.cFileName;
+        plugin.Loaded = GetModuleHandle(fileInfo.cFileName) != nullptr;
+        plugin.NewLoadState = plugin.Loaded;
+        m_Plugins.emplace_back(plugin);
     } while (FindNextFile(fileHandle, &fileInfo));
 
     FindClose(fileHandle);
