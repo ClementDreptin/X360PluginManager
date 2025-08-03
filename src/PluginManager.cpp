@@ -231,5 +231,5 @@ HRESULT PluginManager::MountDrives()
         return hr;
     }
 
-    return hr;
+    return S_OK;
 }
