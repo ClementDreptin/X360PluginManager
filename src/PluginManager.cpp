@@ -192,6 +192,10 @@ HRESULT PluginManager::DoWork(PluginManager *This)
 {
     HRESULT hr = S_OK;
 
+    hr = This->MountDrives();
+    if (FAILED(hr))
+        return hr;
+
     hr = This->UnloadPlugins();
     if (FAILED(hr))
         return hr;
