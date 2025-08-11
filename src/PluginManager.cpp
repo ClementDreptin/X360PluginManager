@@ -140,13 +140,11 @@ void PluginManager::ApplyChanges()
 {
     // Start a system thread to load the plugins, plugins are almost always system DLLs and those
     // can only be loaded from system threads
-    HANDLE threadHandle = Memory::ThreadEx(
+    Memory::ThreadEx(
         reinterpret_cast<PTHREAD_START_ROUTINE>(DoWork),
         this,
-        static_cast<EXCREATETHREAD_FLAG>(EXCREATETHREAD_SYSTEM | EXCREATETHREAD_SUSPENDED)
+        static_cast<EXCREATETHREAD_FLAG>(EXCREATETHREAD_SYSTEM | EXCREATETHREAD_CORE4)
     );
-    XSetThreadProcessor(threadHandle, 4); // System threads can't be started on the same hardware thread as the title
-    ResumeThread(threadHandle);
 }
 
 HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
