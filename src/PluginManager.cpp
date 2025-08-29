@@ -143,7 +143,7 @@ void PluginManager::ApplyChanges()
     Memory::ThreadEx(
         reinterpret_cast<PTHREAD_START_ROUTINE>(DoWork),
         this,
-        static_cast<EXCREATETHREAD_FLAG>(EXCREATETHREAD_SYSTEM | EXCREATETHREAD_CORE4)
+        EXCREATETHREAD_FLAG_SYSTEM | EXCREATETHREAD_FLAG_CORE4
     );
 }
 
