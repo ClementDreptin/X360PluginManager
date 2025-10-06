@@ -38,9 +38,8 @@
   <PropertyGroup>
     <OutDir>$(SolutionDir)build\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)build\$(Configuration)\obj\</IntDir>
-    <RemoteRoot>hdd:\Homebrew\$(ProjectName)</RemoteRoot>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-    <ImageXexOutput>$(OutDir)default.xex</ImageXexOutput>
+    <ImageXexOutput>$(OutDir)$(ProjectName).xex</ImageXexOutput>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemDefinitionGroup>

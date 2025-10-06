@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $RootDir = "$PSScriptRoot\.."
 $BuildDir = "$RootDir\build\Release\bin"
-$DefaultXexPath = "$BuildDir\default.xex"
+$DefaultXexPath = "$BuildDir\X360PluginManager.xex"
 
 function Build {
     # Path to the 32-bit version of MSBuild
