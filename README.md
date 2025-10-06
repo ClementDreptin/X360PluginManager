@@ -64,3 +64,9 @@ To build X360PluginManager in release mode, deploy it to the console and launch 
 ```PS1
 msbuild /p:Configuration=Release
 ```
+
+#### About the debug configuration
+
+The `Debug` build configuration **does NOT** use the debug runtime nor the default debug libraries, this is due to extra checks being done in the debug version of XAPI (`xapilibd.lib`) that trigger a kernel exception (`stop code 0xf4: CRITICAL_OBJECT_TERMINATION`) when using `malloc` from a system thread. This happens because XAPI is title library and titles are not supposed to create system threads.
+
+Because we are not linking against the default debug libraries, the debug build has to use the release builds of [ImGui](https://github.com/ocornut/imgui), [XexUtils](https://github.com/ClementDreptin/XexUtils) and [mINI](https://github.com/ClementDreptin/X360PluginManager/tree/main/deps/mINI).
