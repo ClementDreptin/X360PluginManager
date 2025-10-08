@@ -140,18 +140,17 @@ void PluginManager::ApplyChanges()
 {
     // Start a system thread to load the plugins, plugins are almost always system DLLs and those
     // can only be loaded from system threads
-    Memory::ThreadEx(
+    ThreadEx(
         reinterpret_cast<PTHREAD_START_ROUTINE>(DoWork),
         this,
         EXCREATETHREAD_FLAG_SYSTEM | EXCREATETHREAD_FLAG_CORE4
     );
 }
 
-HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
+HRESULT PluginManager::ReadPluginsDir(const Fs::Path &pluginsDir)
 {
     // Create the search pattern
-    const std::string &pluginsDirWithFinalSeparator = pluginsDir.back() == '\\' ? pluginsDir : pluginsDir + '\\';
-    std::string searchPattern = pluginsDirWithFinalSeparator + "*.xex";
+    Fs::Path searchPattern = pluginsDir / "*.xex";
 
     // Find the first file corresponding to the pattern
     WIN32_FIND_DATA fileInfo = {};
@@ -167,7 +166,7 @@ HRESULT PluginManager::ReadPluginsDir(const std::string &pluginsDir)
     {
         Plugin plugin = {};
         plugin.Name = fileInfo.cFileName;
-        plugin.Path = pluginsDirWithFinalSeparator + fileInfo.cFileName;
+        plugin.Path = pluginsDir / fileInfo.cFileName;
         plugin.Loaded = GetModuleHandle(fileInfo.cFileName) != nullptr;
         plugin.NewLoadState = plugin.Loaded;
         m_Plugins.emplace_back(plugin);
@@ -215,14 +214,14 @@ HRESULT PluginManager::MountDrives()
 
     HRESULT hr = S_OK;
 
-    hr = Xam::MountHdd();
+    hr = Fs::MountHdd();
     if (FAILED(hr) && hr != STATUS_OBJECT_NAME_COLLISION)
     {
         g_Console.Error(Formatter::Format("Couldn't mound HDD. (%X)", hr));
         return hr;
     }
 
-    hr = Xam::MountUsb();
+    hr = Fs::MountUsb();
     if (FAILED(hr) && hr != STATUS_OBJECT_NAME_COLLISION)
     {
         g_Console.Error(Formatter::Format("Couldn't mound USB. (%X)", hr));

@@ -11,7 +11,7 @@ private:
     struct Plugin
     {
         std::string Name;
-        std::string Path;
+        Fs::Path Path;
         bool Loaded;
         bool NewLoadState;
     };
@@ -24,7 +24,7 @@ private:
 
     void ApplyChanges();
 
-    HRESULT ReadPluginsDir(const std::string &pluginsDir);
+    HRESULT ReadPluginsDir(const Fs::Path &pluginsDir);
 
     static HRESULT DoWork(PluginManager *This);
 

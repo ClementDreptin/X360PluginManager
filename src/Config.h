@@ -9,13 +9,13 @@ public:
 
     HRESULT LoadFromDisk();
 
-    inline const std::string &GetPluginsDir() { return m_PluginsDir; }
+    inline const Fs::Path &GetPluginsDir() { return m_PluginsDir; }
 
 private:
     mINI::INIFile m_File;
     mINI::INIStructure m_Structure;
 
-    std::string m_PluginsDir;
+    Fs::Path m_PluginsDir;
 };
 
 extern Config g_Config;
