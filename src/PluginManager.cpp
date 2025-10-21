@@ -108,7 +108,7 @@ HRESULT PluginManager::UnloadPlugins()
 
         // If the plugin was unloaded via an external process between when the app
         // started and now, warn the user and skip
-        HANDLE handle = GetModuleHandle(plugin.Name.c_str());
+        HANDLE handle = GetModuleHandle(plugin.Path.c_str());
         if (handle == nullptr)
         {
             g_Console.Warn(Formatter::Format("\"%s\" was already unloaded.", plugin.Name.c_str()));
@@ -167,7 +167,7 @@ HRESULT PluginManager::ReadPluginsDir(const Fs::Path &pluginsDir)
         Plugin plugin = {};
         plugin.Name = fileInfo.cFileName;
         plugin.Path = pluginsDir / fileInfo.cFileName;
-        plugin.Loaded = GetModuleHandle(fileInfo.cFileName) != nullptr;
+        plugin.Loaded = GetModuleHandle(plugin.Path.c_str()) != nullptr;
         plugin.NewLoadState = plugin.Loaded;
         m_Plugins.emplace_back(plugin);
     } while (FindNextFile(fileHandle, &fileInfo));
