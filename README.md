@@ -13,7 +13,7 @@ Utility app to load and unload plugins from an Xbox 360.
 -   Unzip `X360PluginManager.zip` somewhere.
 -   Modify `X360PluginManager\config.ini` to your needs.
 -   Move the `X360PluginManager` directory to your console.
--   Launch `X360PluginManager\default.xex`.
+-   Launch `X360PluginManager\X360PluginManager.xex`.
 
 ## How to use `config.ini`?
 
