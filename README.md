@@ -9,11 +9,11 @@ Utility app to load and unload plugins from an Xbox 360.
 
 ## Installation
 
--   Download the latest build from the [releases](https://github.com/ClementDreptin/X360PluginManager/releases).
--   Unzip `X360PluginManager.zip` somewhere.
--   Modify `X360PluginManager\config.ini` to your needs.
--   Move the `X360PluginManager` directory to your console.
--   Launch `X360PluginManager\X360PluginManager.xex`.
+- Download the latest build from the [releases](https://github.com/ClementDreptin/X360PluginManager/releases).
+- Unzip `X360PluginManager.zip` somewhere.
+- Modify `X360PluginManager\config.ini` to your needs.
+- Move the `X360PluginManager` directory to your console.
+- Launch `X360PluginManager\X360PluginManager.xex`.
 
 ## How to use `config.ini`?
 
@@ -38,23 +38,21 @@ git clone --recursive https://github.com/ClementDreptin/X360PluginManager.git
 
 ### Requirements
 
--   Having the Xbox 360 Software Development Kit (XDK) installed.
+- Having the Xbox 360 Software Development Kit (XDK) installed.
+- Xbox 360 Neighborhood set up with your RGH/Jtag/Devkit registered as the default console (only necessary if you wan't to deploy to your console automatically).
 
 ### Visual Studio 2010
 
 Open `X360PluginManager.sln` in Visual Studio.
 
-> [!NOTE]
-> Using Visual Studio 2010 is the only way to run X360PluginManager in a debugger (sadly).
+### Any other environment
 
-### Visual Studio 2022 (or any environment)
-
-You can't build with the 64-bit version of MSBuild so you'll need to run the 32-bit version manually. Open PowerShell (which can be done in `View > Terminal` in Visual Studio) and run the following command:
+Xbox 360 projects can't be built with the 64-bit version of MSBuild, you need to run the 32-bit version. You can make yourself an alias for convenience:
 
 ```PS1
 # Create an alias to the 32-bit version of MSBuild named msbuild
-# The default installation path of VS2022 is C:\Program Files\Microsoft Visual Studio\2022\Community
-Set-Alias msbuild "<path_vs2022>\MSBuild\Current\Bin\MSBuild.exe"
+# The default installation path of VS2026 is C:\Program Files\Microsoft Visual Studio\18\Community
+Set-Alias msbuild "<path_vs2026>\MSBuild\Current\Bin\MSBuild.exe"
 ```
 
 To debug X360PluginManager, you need to build and run the debugger from Visual Studio 2010.
