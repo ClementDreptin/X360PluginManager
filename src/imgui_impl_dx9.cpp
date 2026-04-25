@@ -169,6 +169,45 @@ bool ImGui_ImplDX9_Init(IDirect3DDevice9 *device)
     return true;
 }
 
+static void ImGui_ImplDX9_InvalidateDeviceObjects()
+{
+    ImGui_ImplDX9_Data *bd = ImGui_ImplDX9_GetBackendData();
+    if (!bd || !bd->pd3dDevice)
+        return;
+
+    if (bd->pVB)
+    {
+        bd->pVB->Release();
+        bd->pVB = NULL;
+    }
+
+    if (bd->pIB)
+    {
+        bd->pIB->Release();
+        bd->pIB = NULL;
+    }
+
+    // We copied bd->pFontTextureView to io.Fonts->TexID so let's clear that as well.
+    if (bd->FontTexture)
+    {
+        bd->FontTexture->Release();
+        bd->FontTexture = NULL;
+        ImGui::GetIO().Fonts->SetTexID(NULL);
+    }
+}
+
+void ImGui_ImplDX9_Shutdown()
+{
+    ImGui_ImplDX9_Data *bd = ImGui_ImplDX9_GetBackendData();
+    IM_ASSERT(bd != NULL && "No renderer backend to shutdown, or already shutdown?");
+    ImGuiIO &io = ImGui::GetIO();
+
+    ImGui_ImplDX9_InvalidateDeviceObjects();
+    io.BackendRendererName = NULL;
+    io.BackendRendererUserData = NULL;
+    IM_DELETE(bd);
+}
+
 static bool ImGui_ImplDX9_CreateFontsTexture()
 {
     // Build texture atlas
@@ -252,6 +291,8 @@ static void ImGui_ImplDX9_SetupRenderState(ImDrawData *draw_data)
     bd->pd3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     bd->pd3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
+    // Setup the orthographic project and pass the Workd View Projection matrix to the
+    // vertex shader
     float L = draw_data->DisplayPos.x + 0.5f;
     float R = draw_data->DisplayPos.x + draw_data->DisplaySize.x + 0.5f;
     float T = draw_data->DisplayPos.y + 0.5f;
@@ -308,12 +349,14 @@ void ImGui_ImplDX9_RenderDrawData(ImDrawData *draw_data)
     // Allocate buffers
     CUSTOMVERTEX *vtx_dst;
     ImDrawIdx *idx_dst;
-    if (bd->pVB->Lock(0, (UINT)(draw_data->TotalVtxCount * sizeof(CUSTOMVERTEX)), (void **)&vtx_dst, 0) < 0)
+
+    // Check the README to know why the SizeToLock argument is 0
+    if (bd->pVB->Lock(0, 0, (void **)&vtx_dst, 0) < 0)
     {
         d3d9_state_block->Release();
         return;
     }
-    if (bd->pIB->Lock(0, (UINT)(draw_data->TotalIdxCount * sizeof(ImDrawIdx)), (void **)&idx_dst, 0) < 0)
+    if (bd->pIB->Lock(0, 0, (void **)&idx_dst, 0) < 0)
     {
         bd->pVB->Unlock();
         d3d9_state_block->Release();

@@ -60,6 +60,17 @@ bool ImGui_ImplXbox360_Init()
     return true;
 }
 
+void ImGui_ImplXbox360_Shutdown()
+{
+    ImGui_ImplXbox360_Data *bd = ImGui_ImplXbox360_GetBackendData();
+    IM_ASSERT(bd != NULL && "No platform backend to shutdown, or already shutdown?");
+    ImGuiIO &io = ImGui::GetIO();
+
+    io.BackendPlatformName = NULL;
+    io.BackendPlatformUserData = NULL;
+    IM_DELETE(bd);
+}
+
 static void ImGui_ImplXbox360_UpdateGamepads()
 {
     ImGuiIO &io = ImGui::GetIO();
